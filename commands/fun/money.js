@@ -11,7 +11,7 @@ module.exports = {
         let points;
 
         switch (args[0]) {
-            case '查看金額':
+            case '查詢金額':
                 db.get('SELECT points FROM economy WHERE userId = ?', [userId], (err, row) => {
                     if (err) {
                         console.error(err.message);
@@ -96,7 +96,7 @@ module.exports = {
                 });    
                 break;
             default:
-                return message.reply('無效的指令。請使用「查看金額」或其他有效指令。');
+                return message.reply('無效的指令。請使用「fu.經濟 查詢金額」或其他有效指令。');
         }
     }
 };

@@ -288,10 +288,10 @@ client.on('messageCreate', message => {
         // 如果有提及的用戶，回復歡迎信息
         if (member) {
             message.channel.send(` ${member.displayName} 歡迎光臨 - ${serverName}！`);
-            message.channel.send(` 有任何疑問可請至 https://discord.com/channels/906520813707075634/908334271691886603 查詢`);
-            message.channel.send(` 來這自我介紹唷 https://discord.com/channels/906520813707075634/908336680333877268 ！`);
-            message.channel.send(` 可以透過** fu.簽到 **來進行打卡唷！(功能屬於BATA測試中)`);
-            message.channel.send(` 機器人相關問題可詢問開發者<@697783143347781682>`);
+            message.channel.send(` 1.有任何疑問可請至 https://discord.com/channels/906520813707075634/908334271691886603 查詢`);
+            message.channel.send(` 2.來這自我介紹唷 https://discord.com/channels/906520813707075634/908336680333877268 ！`);
+            message.channel.send(` 3.可以透過** fu.簽到 **來進行打卡唷！(功能屬於BATA測試中)`);
+            message.channel.send(` 4.機器人相關問題可詢問開發者<@697783143347781682>`);
         } else {
             // 如果沒有提及的用戶，提示用戶提及一個新成員
             message.channel.send('請提及一個新成員來歡迎他們！');
