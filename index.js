@@ -278,6 +278,8 @@ client.on('messageCreate', message => {
     }
 });
 
+const { MessageEmbed } = require('discord.js');
+
 client.on('messageCreate', message => {
     // 檢查消息是否以 "fu.新人" 開頭
     if (message.content.startsWith('fu.新人')) {
@@ -287,17 +289,31 @@ client.on('messageCreate', message => {
         const serverName = message.guild.name;
         // 如果有提及的用戶，回復歡迎信息
         if (member) {
-            message.channel.send(` ${member.displayName} 歡迎光臨 - ${serverName}！`);
-            message.channel.send(` 1.有任何疑問可請至 https://discord.com/channels/906520813707075634/908334271691886603 查詢`);
-            message.channel.send(` 2.來這自我介紹唷 https://discord.com/channels/906520813707075634/908336680333877268 ！`);
-            message.channel.send(` 3.可以透過** fu.簽到 **來進行打卡唷！(功能屬於BATA測試中)`);
-            message.channel.send(` 4.機器人相關問題可詢問開發者<@697783143347781682>`);
+            const embed = new MessageEmbed()
+                .setTitle(`歡迎 ${member.displayName} 歡迎光臨 - ${serverName}！`)
+                .setDescription(`
+                ˊ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯  ˋ
+
+                * 以下是入館手續的各頻道 請記得「詳閱規範、進行驗證、領取身份、填寫個資」
+                 * ¹https://discord.com/channels/906520813707075634/909259324885467157 
+ * ²https://discord.com/channels/906520813707075634/1122377351775404193
+ * ³https://discord.com/channels/906520813707075634/986046493028909086
+ * ⁴https://discord.com/channels/906520813707075634/908336680333877268
+
+                
+                ˋ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯  ˊ
+                |機器人諾有問題請詢問 <@697783143347781682>|
+                `)
+                .setColor('#0099ff');
+            
+            message.channel.send({ embeds: [embed] });
         } else {
             // 如果沒有提及的用戶，提示用戶提及一個新成員
             message.channel.send('請提及一個新成員來歡迎他們！');
         }
     }
 });
+
 
 // 監聽消息創建事件
 client.on('messageCreate', message => {
@@ -313,6 +329,48 @@ client.on('messageCreate', message => {
     }
 
     // 其他命令...
+});
+//test
+
+let channelA, channelB;
+
+client.on('messageCreate', message => {
+    // 如果消息來自機器人，則直接返回
+    if (message.author.bot) return;
+
+    // 綁定頻道 A
+    if (message.content.startsWith('綁定頻道 A')) {
+        channelA = message.channel;
+        message.reply(`已綁定此頻道作為頻道 A。`);
+    }
+
+    // 綁定頻道 B
+    if (message.content.startsWith('綁定頻道 B')) {
+        channelB = message.channel;
+        message.reply(`已綁定此頻道作為頻道 B。`);
+    }
+
+    // 解除綁定
+    if (message.content.startsWith('解除綁定')) {
+        if (message.channel.id === channelA.id) {
+            channelA = null;
+            message.reply('已解除綁定頻道 A。');
+        } else if (message.channel.id === channelB.id) {
+            channelB = null;
+            message.reply('已解除綁定頻道 B。');
+        } else {
+            message.reply('此頻道未被綁定。');
+        }
+    }
+
+    // 監聽頻道誰說話
+    if (channelA && channelB) {
+        if (message.channel.id === channelA.id) {
+            channelB.send(`${message.guild.name} ${message.author.username} 說了：${message.content}`);
+        } else if (message.channel.id === channelB.id) {
+            channelA.send(`${message.guild.name} ${message.author.username} 說了：${message.content}`);
+        }
+    }
 });
 
 client.login(process.env.TOKEN)
