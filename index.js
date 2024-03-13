@@ -328,9 +328,9 @@ client.on('messageCreate', message => {
         birthday.execute(message, args);
     }
 
-    // 其他命令...
 });
-//test
+
+//跨平台聊天
 
 let channelA, channelB;
 
