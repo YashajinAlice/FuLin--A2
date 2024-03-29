@@ -93,8 +93,47 @@ module.exports = {
                                 return message.reply(`已成功從 ${targetUser.username} 扣除 ${points} 點數。`);
                             });
                     }
-                });    
-                break;
+                }); 
+//工作   
+            case 'work':
+    db.get('SELECT points FROM economy WHERE userId = ?', [userId], (err, row) => {
+        if (err) {
+            console.error(err.message);
+            return message.reply('查詢工作狀態時出錯，請稍後再試。');
+        }
+        // 檢查用戶是否已經有點數記錄
+        if (!row) {
+            db.run('INSERT INTO economy(userId, points) VALUES(?, 0)', [userId], function(err) {
+                if (err) {
+                    console.error(err.message);
+                    return message.reply('創建新用戶時出錯，請稍後再試。');
+                }
+                // 用戶記錄創建後再次執行工作指令
+                message.reply('你的賬戶已創建，請再次嘗試 "work" 指令。');
+            });
+        } else {
+            // 生成一個 0 到 1 的隨機數來決定工作是否成功
+            if (Math.random() < 0.5) {
+                // 工作失敗
+                return message.reply('由於狀態不佳，工作無法完成。');
+            } else {
+                // 工作成功，生成隨機點數
+                const earnedPoints = Math.floor(Math.random() * (150 - 10 + 1)) + 10;
+                db.run('UPDATE economy SET points = points + ? WHERE userId = ?', [earnedPoints, userId],
+                    function(err) {
+                        if (err) {
+                            console.error(err.message);
+                            return message.reply('更新點數時出錯，請稍後再試。');
+                        }
+                        return message.reply(`你成功完成工作了！並得到了 ${earnedPoints} 點數。`);
+                    });
+            }
+        }
+    });
+        break;
+    
+    
+
             default:
                 return message.reply('無效的指令。請使用「fu.經濟 查詢金額」或其他有效指令。');
         }

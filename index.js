@@ -31,6 +31,7 @@ const birthday = require('./commands/fun/birthday');
 //money
 const money = require('./commands/fun/money.js');
 
+
 //權限--------------------------------------------------------------
 const client = new Discord.Client({
     intents: [
@@ -133,7 +134,7 @@ client.on("guildMemberAdd", async (member) => {
         content: `歡迎 <@${member.id}> 加入本酒館🎉`,
         files: [img]
     })
-})
+});
 
 //成員退出後的通知頻道設置
 client.on('guildMemberRemove', async member => {
@@ -199,7 +200,7 @@ client.on('messageCreate', message => {
         fortune.execute(message);  // 執行抽籤命令
     }
 });
-
+/*
 //chat
 const targetChannelIds = ['1191950389797470329', '1215230003600560179'];
 
@@ -230,8 +231,48 @@ client.on('messageCreate', message => {
         }
     }
 
-    message.reply('我聽不懂你在說什麼，誒嘿☆');
+    message.reply('人家聽不懂你在說什麼耶，誒嘿☆', '我聽不懂你在說什麼，不如你再說一次看看？', '嗯.....我不懂，妳說清楚點');
 });
+*/
+
+//chat
+const targetChannelIds = ['1191950389797470329'];
+
+// 定義回覆
+const replies = ['人家聽不懂你在說什麼耶，誒嘿☆', '我聽不懂你在說什麼，不如你再說一次看看？', '嗯.....我不懂，妳說清楚點'];
+
+client.on('messageCreate', message => {
+    // 如果訊息是由機器人發送的，或者不是在目標頻道中發送的，則忽略
+    if (message.author.bot || !targetChannelIds.includes(message.channel.id)) return;
+
+    // 檢查訊息是否包含貼圖
+    if (message.attachments.size > 0) {
+        message.reply('你覺得我看得懂貼圖嗎，你個笨笨？');
+        return;
+    }
+    // 檢查訊息是否只包含數字
+    if (/^\d+$/.test(message.content)) {
+        message.reply('你覺得我看得懂數字嗎？');
+        return;
+    }    
+    // 檢查訊息是否包含表情符號
+    if (message.content.match(/[\u{1F600}-\u{1F64F}]/u)) {
+        message.reply('你覺得我看得懂表情符號嗎？');
+        return;
+    }
+    // 檢查訊息中是否包含關鍵字
+    for (const keyword in responses) {
+        if (message.content.includes(keyword)) {
+            message.reply(responses[keyword]);
+            return;
+        }
+    }
+
+    // 選擇一個隨機的回覆
+    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+    message.reply(randomReply);
+});
+
 
 //help.js
 // main.js
@@ -268,13 +309,27 @@ client.on('messageCreate', message => {
     const args = message.content.slice(bot.prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
-    // 如果命令是 '簽到'
-    if (command === '簽到') {
-        signInCommand.execute(message, args, db);
-    }
-    // 如果命令是 '經濟'
-    if (command === '經濟') {
-        money.execute(message, args);
+    // 根據命令名稱執行相應的操作
+    switch (command) {
+        case '簽到':
+            signInCommand.execute(message, args, db);
+            break;
+        case '經濟':
+            money.execute(message, args);
+            break;
+        case '新增商品':
+            shopCommands.addProduct(message, args, db);
+            break;
+        case '刪除商品':
+            shopCommands.deleteProduct(message, args, db);
+            break;
+        case '購買商品':
+            shopCommands.purchaseProduct(message, args, db);
+            break;
+        // 可以根據需要添加更多商店相關的指令
+        default:
+            // 如果指令不匹配，可以回復一個錯誤消息或者忽略
+            break;
     }
 });
 
@@ -303,10 +358,14 @@ client.on('messageCreate', message => {
                 
                 ˋ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯  ˊ
                 |機器人諾有問題請詢問 <@697783143347781682>|
+                |Ver : 1.1.3.1 |
                 `)
                 .setColor('#0099ff');
             
             message.channel.send({ embeds: [embed] });
+            member.send(`歡迎客官光臨 ${serverName}！`);
+            member.send(`如果有甚麼問題可以多加利用 https://discord.com/channels/906520813707075634/908334271691886603 唷！`);
+            member.send(`如果是機器人的問題，可以詢問酒管內的工程師！芙檁`);
         } else {
             // 如果沒有提及的用戶，提示用戶提及一個新成員
             message.channel.send('請提及一個新成員來歡迎他們！');
@@ -366,9 +425,9 @@ client.on('messageCreate', message => {
     // 監聽頻道誰說話
     if (channelA && channelB) {
         if (message.channel.id === channelA.id) {
-            channelB.send(`${message.guild.name} ${message.author.username} 說了：${message.content}`);
+            channelB.send(`${message.guild.name} ${message.author.username} ：${message.content}`);
         } else if (message.channel.id === channelB.id) {
-            channelA.send(`${message.guild.name} ${message.author.username} 說了：${message.content}`);
+            channelA.send(`${message.guild.name} ${message.author.username} ：${message.content}`);
         }
     }
 });
