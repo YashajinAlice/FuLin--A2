@@ -19,7 +19,7 @@ module.exports = {
     execute(message, args) {
         const userId = message.author.id;
         const channelId = message.channel.id; // 獲取頻道 ID
-
+        //尚未添加生日當天的事件
         // 1. 新增生日
         if (args[0] === '新增') {
             const date = args.slice(1).join(' ');

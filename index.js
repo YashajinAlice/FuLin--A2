@@ -314,6 +314,9 @@ client.on('messageCreate', message => {
         case '簽到':
             signInCommand.execute(message, args, db);
             break;
+        case '比大小':
+            ratioSize.execute(message, args);
+            break;
         case '經濟':
             money.execute(message, args);
             break;
@@ -334,6 +337,7 @@ client.on('messageCreate', message => {
 });
 
 const { MessageEmbed } = require('discord.js');
+const ratioSize = require("./commands/fun/ratio size.js");
 
 client.on('messageCreate', message => {
     // 檢查消息是否以 "fu.新人" 開頭
