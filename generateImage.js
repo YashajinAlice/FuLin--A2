@@ -1,6 +1,8 @@
 const Canvas = require("canvas")
 const Discord = require("discord.js")
-const background = "https://cdn.discordapp.com/attachments/1198617751489622027/1216437705471426612/welcome.png?ex=660062e5&is=65edede5&hm=4533a761b7f3e0e8fbc66f7ee666d240aa8965ebd6ce7436a125cf70827d5ca4&"
+const background = "https://cdn.discordapp.com/attachments/1198617751489622027/1216437705471426612/welcome.png?ex=662c8d25&is=662b3ba5&hm=96e006ea49d2b4409e4623fe36ebfc3531e8236a65133cc1f4d1991aa4ce87ea&"
+
+Canvas.registerFont('./font/Cubic_11.ttf', { family: 'Cubic_11.ttf' });
 
 const dim = {
     height: 576,
@@ -43,7 +45,7 @@ const generateImage = async (member) => {
     
         // 繪製成員數量
         ctx.fillStyle = "white"
-        ctx.font = "30px Cubic 11";
+        ctx.font = "30px 'Cubic_11'";
         var text = "您是第 " + memberCount + " 位蒞臨酒館的客官！";
         var textWidth = ctx.measureText(text).width;
         ctx.fillText(text, 750 - textWidth / 2, 530);
@@ -58,7 +60,7 @@ const generateImage = async (member) => {
     // 繪製使用者名稱
 
     ctx.fillStyle = "white";
-    ctx.font = "50px Cubic 11";
+    ctx.font = "50px 'Cubic_11'";
     var text = username;
     var textWidth = ctx.measureText(text).width;
     ctx.fillText(text, 750 - textWidth / 2, 450);
